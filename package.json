@@ -1,0 +1,80 @@
+{
+  "name": "some-api",
+  "version": "1.0.0",
+  "description": "some api",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Gmora08/some-api-test.git"
+  },
+  "scripts": {
+    "clean": "rm -rf build && rm -rf test_results && mkdir build",
+    "copy-tests-resources": "find src/tests ! -name '*.js' -type f -exec cp '{}' build/'{}' ';'",
+    "babel-transpile": "babel -d ./build . -s --ignore node_modules",
+    "copy-migration-files": "cp -R db/ build/db",
+    "start": "node cluster.js",
+    "build": "npm run clean && npm run babel-transpile && npm run copy-migration-files && npm run copy-tests-resources",
+    "dev": "nodemon --exec babel-node src/index.js | pino-colada",
+    "test": "jest --detectOpenHandles --runInBand --config src/tests/jest.config.default.json",
+    "unit-tests": "jest --ci --detectOpenHandles --runInBand --forceExit --config src/tests/jest.config.unit.json",
+    "integration-tests": "jest --ci --detectOpenHandles --runInBand --forceExit --config src/tests/jest.config.integration.json",
+    "lint": "eslint 'src/**/*.js' --fix",
+    "format": "prettier-eslint 'server/**/*.{js,json}' --write",
+    "coverage": "NODE_ENV=test jest --collectCoverageFrom=src/**.js --collectCoverageFrom=!src/index.js --coverage src",
+    "repl": "NODE_OPTIONS=--experimental-repl-await node repl.js"
+  },
+  "lint-staged": {
+    "**/*.js": [
+      "eslint --fix",
+      "prettier-eslint --write",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "author": "gmora008",
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.4.5",
+    "@babel/node": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "dotenv": "^8.0.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.3",
+    "eslint-plugin-jest": "^22.6.4",
+    "eslint-plugin-promise": "^4.1.1",
+    "husky": "^2.4.0",
+    "jest": "^24.8.0",
+    "lint-staged": "^8.2.0",
+    "nodemon": "^1.19.1",
+    "pino-colada": "^1.4.4",
+    "pino-pretty": "^3.1.0",
+    "prettier-eslint-cli": "^4.7.1",
+    "superagent": "^5.0.6",
+    "supertest": "^4.0.2"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.4.4",
+    "@hapi/joi": "^15.0.3",
+    "applicationinsights": "^1.4.1",
+    "axios": "^0.19.0",
+    "body-parser": "^1.19.0",
+    "cluster": "^0.7.7",
+    "core-js": "^3.1.4",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "jest": "^24.5.0",
+    "jest-junit": "^6.4.0",
+    "jest-chain": "^1.1.2",
+    "express-pino-logger": "^4.0.0",
+    "helmet": "^3.18.0",
+    "mssql": "^5.1.0",
+    "pino": "^5.12.6",
+    "regenerator-runtime": "^0.13.2",
+    "urlencode": "^1.1.0"
+  }
+}
